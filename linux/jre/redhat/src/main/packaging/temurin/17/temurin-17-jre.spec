@@ -1,10 +1,10 @@
-%global upstream_version 17.0.10+7
+%global upstream_version 17.0.11+9
 # Only [A-Za-z0-9.] allowed in version:
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Versioning/#_upstream_uses_invalid_characters_in_the_version
 # also not very intuitive:
 #  $ rpmdev-vercmp 17.0.1.0.1___17.0.1.0+12
 #  17.0.1.0.0___12 == 17.0.1.0.0+12
-%global spec_version 17.0.10.0.0.7
+%global spec_version 17.0.11.0.0.9
 %global spec_release 1
 %global priority 1712
 
@@ -22,6 +22,7 @@
 %global vers_arch3 s390x
 %global vers_arch4 aarch64
 %global vers_arch5 arm
+%global vers_arch6 riscv64
 %global src_num 0
 %global sha_src_num 1
 %endif
@@ -31,6 +32,7 @@
 %global vers_arch3 s390x
 %global vers_arch4 aarch64
 %global vers_arch5 arm
+%global vers_arch6 riscv64
 %global src_num 2
 %global sha_src_num 3
 %endif
@@ -40,6 +42,7 @@
 %global vers_arch3 s390x
 %global vers_arch4 aarch64
 %global vers_arch5 arm
+%global vers_arch6 riscv64
 %global src_num 4
 %global sha_src_num 5
 %endif
@@ -49,6 +52,7 @@
 %global vers_arch3 s390x
 %global vers_arch4 aarch64
 %global vers_arch5 arm
+%global vers_arch6 riscv64
 %global src_num 6
 %global sha_src_num 7
 %endif
@@ -58,8 +62,19 @@
 %global vers_arch3 s390x
 %global vers_arch4 aarch64
 %global vers_arch5 arm
+%global vers_arch6 riscv64
 %global src_num 8
 %global sha_src_num 9
+%endif
+%ifarch riscv64
+%global vers_arch x64
+%global vers_arch2 ppc64le
+%global vers_arch3 s390x
+%global vers_arch4 aarch64
+%global vers_arch5 arm
+%global vers_arch6 riscv64
+%global src_num 10
+%global sha_src_num 11
 %endif
 # Allow for noarch SRPM build
 %ifarch noarch
@@ -81,7 +96,7 @@ Packager:    Eclipse Adoptium Package Maintainers <temurin-dev@eclipse.org>
 AutoReqProv: no
 Prefix: /usr/lib/jvm/%{name}
 
-ExclusiveArch: x86_64 ppc64le s390x aarch64 %{arm}
+ExclusiveArch: x86_64 ppc64le s390x aarch64 %{arm} riscv64
 
 BuildRequires:  tar
 BuildRequires:  wget
@@ -124,6 +139,9 @@ Source7: %{source_url_base}/jdk-%{upstream_version_url}/OpenJDK17U-jre_%{vers_ar
 # Fifth architecture (arm32)
 Source8: %{source_url_base}/jdk-%{upstream_version_url}/OpenJDK17U-jre_%{vers_arch5}_linux_hotspot_%{upstream_version_no_plus}.tar.gz
 Source9: %{source_url_base}/jdk-%{upstream_version_url}/OpenJDK17U-jre_%{vers_arch5}_linux_hotspot_%{upstream_version_no_plus}.tar.gz.sha256.txt
+# Sixth architecture (riscv64)
+Source10: %{source_url_base}/jdk-%{upstream_version_url}/OpenJDK17U-jre_%{vers_arch6}_linux_hotspot_%{upstream_version_no_plus}.tar.gz
+Source11: %{source_url_base}/jdk-%{upstream_version_url}/OpenJDK17U-jre_%{vers_arch6}_linux_hotspot_%{upstream_version_no_plus}.tar.gz.sha256.txt
 
 # Set the compression format to xz to be compatible with more Red Hat flavours. Newer versions of Fedora use zstd which
 # is not available on CentOS 7, for example. https://github.com/rpm-software-management/rpm/blob/master/macros.in#L353
@@ -186,6 +204,8 @@ fi
 /usr/lib/tmpfiles.d/%{name}.conf
 
 %changelog
+* Wed Apr 17 2024 Eclipse Adoptium Package Maintainers <temurin-dev@eclipse.org> 17.0.11.0.0.9-1
+- Eclipse Temurin 17.0.11+9 release.
 * Mon Jan 22 2024 Eclipse Adoptium Package Maintainers <temurin-dev@eclipse.org> 17.0.10.0.0.7-1
 - Eclipse Temurin 17.0.10+7 release.
 * Thu Oct 26 2023 Eclipse Adoptium Package Maintainers <temurin-dev@eclipse.org> 17.0.9.0.0.9-1

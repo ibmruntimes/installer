@@ -1,5 +1,7 @@
 # Adoptium Installers
 
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/adoptium/installer/badge)](https://api.securityscorecards.dev/projects/github.com/adoptium/installer)
+
 Repository for creating installable packages for Eclipse Adoptium based releases.
 
 The packages are created using:
@@ -60,6 +62,10 @@ The following documentation describes how to create and publish these Linux inst
       - For rpm:
         - under sub-folder "\<distro>/\<os_version>/\<arch>/Packages/"
         - file "temurin-\<MAJOR_VERSION>-jdk-*.\<arch>.rpm" exist, e.g: temurin-19-jdk-19.0.1.0.0.10-1.armv7hl.rpm for jdk-19.0.1 hotspot JDK
+
+## More Information
+
+For more information on updating the linux package installers, additional documentation can be found in the docs subfolder of this project. [See Here](./docs/Guide_To_The_Linux_Installers.md)
 
 ## Troubleshooting Tips
 
