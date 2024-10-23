@@ -29,16 +29,25 @@ public class AlpineFlavours implements ArgumentsProvider {
 	@Override
 	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 		/*
-         * Alpine policy: current (alive) releases and development version.
-         *     (https://alpinelinux.org/releases/)
+		 * Alpine policy: current (alive) releases and development version.
+		 *     (https://alpinelinux.org/releases/)
 		 */
+		
+		String containerRegistry = "";
+
+		if (System.getenv("containerRegistry") == null) {
+			System.out.println("Using docker.io as the default container registry");
+		} else {
+			containerRegistry = System.getenv("containerRegistry");
+			System.out.println("Using container registry: " + containerRegistry);
+		}
+
 		return Stream.of(
-			Arguments.of("alpine", "edge"),
-			Arguments.of("alpine", "latest"),
-			Arguments.of("alpine", "3.17"),
-			Arguments.of("alpine", "3.16"),
-			Arguments.of("alpine", "3.15"),
-			Arguments.of("alpine", "3.14")
+			Arguments.of(containerRegistry + "alpine", "edge"),
+			Arguments.of(containerRegistry + "alpine", "latest"),
+			Arguments.of(containerRegistry + "alpine", "3.19"),
+			Arguments.of(containerRegistry + "alpine", "3.18"),
+			Arguments.of(containerRegistry + "alpine", "3.17")
 		);
 	}
 }

@@ -5,7 +5,7 @@ Maintainer: Eclipse Adoptium Package Maintainers <temurin-dev@eclipse.org>
 Build-Depends: debhelper (>= 11), lsb-release
 
 Package: temurin-22-jre
-Architecture: amd64 arm64 ppc64el riscv64
+Architecture: amd64 arm64 ppc64el s390x riscv64
 Depends: adoptium-ca-certificates,
          java-common,
          libasound2,
@@ -20,8 +20,8 @@ Depends: adoptium-ca-certificates,
          zlib1g
 Recommends: fonts-dejavu-core,
             fonts-dejavu-extra
-Provides: java-runtime,
-          java-runtime-headless,
+Provides: java-runtime (= 22),
+          java-runtime-headless (= 22),
           java10-runtime,
           java11-runtime,
           java12-runtime,

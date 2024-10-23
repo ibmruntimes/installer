@@ -1,4 +1,6 @@
-FROM alpine
+ARG CONTAINER_REGISTRY=""
+
+FROM ${CONTAINER_REGISTRY}alpine
 ENV GOSU_VERSION 1.14
 
 RUN set -eux; \
@@ -27,6 +29,7 @@ RUN --mount=type=secret,id=gpg,gid=1000,uid=1000,dst=/tmp/private.rsa \
 		wget -o /home/builder/.abuild/private.rsa.pub https://packages.adoptium.net/artifactory/api/security/keypair/public/repositories/apk; \
 	else \
 		abuild-keygen -a -n; \
+		sudo cp /home/builder/.abuild/*.rsa.pub /etc/apk/keys/; \
 	fi
 
 # Prepare entrypoint
