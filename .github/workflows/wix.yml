@@ -27,10 +27,10 @@ jobs:
     name: wix
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Install wix toolset
-        run: dotnet tool install --global wix --version 5.0.0 --verbosity quiet
+        run: dotnet tool install --global wix --version 6.0.0 --verbosity quiet
 
       - name: Fetch latest Windows version from Adoptium API
         run: |
@@ -91,6 +91,7 @@ jobs:
         run: call Build.OpenJDK_generic.cmd
         working-directory: wix
         env:
+          WIN_SDK_FULL_VERSION: "10.0.26100.0"
           PRODUCT_CATEGORY: jdk
           ARCH: ${{ matrix.ARCH }}
           JVM: ${{ matrix.JVM }}
@@ -100,12 +101,13 @@ jobs:
         run: call Build.OpenJDK_generic.cmd
         working-directory: wix
         env:
+          WIN_SDK_FULL_VERSION: "10.0.26100.0"
           PRODUCT_CATEGORY: jre
           ARCH: ${{ matrix.ARCH }}
           JVM: ${{ matrix.JVM }}
         shell: cmd
 
-      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: windows-${{ env.PRODUCT_MAJOR_VERSION }}-${{ matrix.arch }}
           path: wix/ReleaseDir/*.msi

@@ -13,7 +13,7 @@ REM PRODUCT_CATEGORY=jre|jdk (only one at a time)
 REM SKIP_MSI_VALIDATION=true (Add -sval option to light.exe to skip MSI/MSM validation and skip smoke.exe )
 REM UPGRADE_CODE_SEED=thisIsAPrivateSecretSeed ( optional ) for upgradable MSI (If none, new PRODUCT_UPGRADE_CODE is generate for each run)
 REM OUTPUT_BASE_FILENAME=customFileName (optional) for setting file names that are not based on the default naming convention
-REM WIX_VERSION=5.0.0 (optional) for setting the version of Wix Toolset to use
+REM WIX_VERSION=6.0.0 (optional) for setting the version of Wix Toolset to use
 
 SETLOCAL ENABLEEXTENSIONS
 SET ERR=0
@@ -38,7 +38,12 @@ IF NOT DEFINED PRODUCT_HELP_LINK SET PRODUCT_HELP_LINK=https://github.com/adopti
 IF NOT DEFINED PRODUCT_SUPPORT_LINK SET PRODUCT_SUPPORT_LINK=https://adoptium.net/support
 IF NOT DEFINED PRODUCT_UPDATE_INFO_LINK SET PRODUCT_UPDATE_INFO_LINK=https://adoptium.net/temurin/releases
 IF NOT DEFINED WIX_HEAT_PATH SET WIX_HEAT_PATH=.\Resources\heat_dir\heat.exe
-IF NOT DEFINED WIX_VERSION SET WIX_VERSION=5.0.0
+IF NOT DEFINED WIX_VERSION SET WIX_VERSION=6.0.0
+
+REM default windows_SDK version
+REM See folder e.g. "C:\Program Files (x86)\Windows Kits\[10]\bin\[10.0.20348.0]\!PLATFORM!"
+IF NOT DEFINED WIN_SDK_MAJOR_VERSION SET WIN_SDK_MAJOR_VERSION=10
+IF NOT DEFINED WIN_SDK_FULL_VERSION SET WIN_SDK_FULL_VERSION=10.0.20348.0
 
 powershell -ExecutionPolicy Bypass -File "%~dp0\helpers\Validate-Input.ps1" ^
     -toValidate '%ARCH%' ^
@@ -79,10 +84,6 @@ IF "%SKIP_MSI_VALIDATION%" == "true" (
 	SET "MSI_VALIDATION_OPTION= -sval "
 )
 
-REM Configure available SDK version:
-REM See folder e.g. "C:\Program Files (x86)\Windows Kits\[10]\bin\[10.0.16299.0]\x64"
-SET WIN_SDK_MAJOR_VERSION=10
-SET WIN_SDK_FULL_VERSION=10.0.17763.0
 SET WORKDIR=Workdir\
 mkdir %WORKDIR%
 
@@ -323,7 +324,7 @@ FOR %%A IN (%ARCH%) DO (
     )
 
     REM Add all supported languages to MSI Package attribute
-    CSCRIPT "%ProgramFiles(x86)%\Windows Kits\%WIN_SDK_MAJOR_VERSION%\bin\%WIN_SDK_FULL_VERSION%\x64\WiLangId.vbs" //Nologo ReleaseDir\!OUTPUT_BASE_FILENAME!.msi Package !LANGIDS!
+    CSCRIPT "%ProgramFiles(x86)%\Windows Kits\%WIN_SDK_MAJOR_VERSION%\bin\%WIN_SDK_FULL_VERSION%\!PLATFORM!\WiLangId.vbs" //Nologo ReleaseDir\!OUTPUT_BASE_FILENAME!.msi Package !LANGIDS!
     IF ERRORLEVEL 1 (
 		ECHO Failed to pack all languages into MSI : !LANGIDS!
 	    GOTO FAILED
@@ -355,7 +356,7 @@ FOR %%A IN (%ARCH%) DO (
 	        ECHO try !timestampErrors! / sha256 / timestamp server : %%s
 		REM Always hide password here
 		@ECHO OFF
-                "%ProgramFiles(x86)%\Windows Kits\%WIN_SDK_MAJOR_VERSION%\bin\%WIN_SDK_FULL_VERSION%\x64\signtool.exe" sign -f "%SIGNING_CERTIFICATE%" -p "%SIGN_PASSWORD%" -fd sha256 -d "Adoptium" -t %%s "ReleaseDir\!OUTPUT_BASE_FILENAME!.msi"
+                "%ProgramFiles(x86)%\Windows Kits\%WIN_SDK_MAJOR_VERSION%\bin\%WIN_SDK_FULL_VERSION%\!PLATFORM!\signtool.exe" sign -f "%SIGNING_CERTIFICATE%" -p "%SIGN_PASSWORD%" -fd sha256 -d "Adoptium" -t %%s "ReleaseDir\!OUTPUT_BASE_FILENAME!.msi"
 		@ECHO ON
 		IF NOT "%DEBUG%" == "true" @ECHO OFF
 

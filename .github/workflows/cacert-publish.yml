@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Harden Runner
-        uses: step-security/harden-runner@91182cccc01eb5e619899d80e4e971d6181294a7 # v2.10.1
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2 # v2.13.2
         with:
           disable-sudo: true
           egress-policy: block
@@ -38,16 +38,16 @@ jobs:
             services.gradle.org:443
 
       - name: Checkout
-        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.2.1
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4.4.0
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           java-version: '17'
           java-package: jdk
           architecture: x64
           distribution: 'temurin'
 
-      - uses: jfrog/setup-jfrog-cli@9fe0f98bd45b19e6e931d457f4e98f8f84461fb5 # v4.4.1
+      - uses: jfrog/setup-jfrog-cli@5b06f730cc5a6f55d78b30753f8583454b08c0aa # v4.8.1
         env:
           JF_URL: https://adoptium.jfrog.io
           JF_USER: ${{ secrets.ARTIFACTORY_USER }}
@@ -71,7 +71,7 @@ jobs:
       - name: Upload deb file to Artifactory
         if: steps.check-deb.outputs.file_exists == 'false'
         run: |
-          DISTRO_LIST="trixie,bookworm,buster,noble,jammy,focal,bionic"
+          DISTRO_LIST="trixie,bookworm,buster,oracular,noble,jammy,focal,bionic"
           FILE=$(ls ca-certificates/debian/build/ospackage/*.deb)
           # Upload cacerts deb file
           jf rt u "$FILE" "deb/pool/main/a/adoptium-ca-certificates/$(basename ${FILE})" --flat=true
